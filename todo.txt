@@ -1,7 +1,9 @@
 TODO
 
-1. Player and player movement
+1. Player and player movement (using missile0 as player)
 2. collisions
 3. add in other sprites(ball, missiles, etc)
 	and the collision detection
 4. Add in "rooms" and tweak existing	
+5. work on content for manual----------------maybe over weekend when we can't make it to the lab but have some free time to work?
+6. add in buzzing sound for alarm

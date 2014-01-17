@@ -1,6 +1,6 @@
 ;------------------------------------------------
 ;
-; untitled
+; Saved By The Bell
 ; Atari VCS Game 
 ; Created by Brinkman, Bo Dr. on 2014-01-10.
 ;
@@ -67,21 +67,21 @@ MainLoop
     sta     TIM64T
 
         ;***** Vertical Blank code goes here
-        sta         WSYNC
-        inc         horiz
-        
-        lda                horiz
-        clc
-        sta                WSYNC
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
+;        sta         WSYNC
+ ;       inc         horiz
+  ;      
+   ;     lda                horiz
+    ;    clc
+     ;   sta                WSYNC
+      ;  nop
+       ; nop
+;        nop
+;        nop
+;        nop
+;        nop
+;        nop
+;        nop
+;        nop
 ;.horizloop
 ;        sbc                #15                ;2
 ;        bpl                .horizloop        ;3
@@ -274,16 +274,18 @@ DrawScreen
 ;------------------------------------------------
         lda                #%01000010
         sta                VBLANK
-    lda                #36
-    sta                TIM64T
+    	lda                #36
+    	sta                TIM64T
 
         ;***** Overscan Code goes here
-        lda                #$0
-        sta                COLUBK
-        sta                COLUPF
-        sta                PF0
-        sta                PF1
-        sta                PF2
+		;collision detection will happen between Missile0
+		;and other stuff, the player controls
+		;missile0
+		;addresses for collision:
+		;CXM0P		;missile collides with player0 or1
+		;CXM0FB		;missile collides with PlayField Or Ball
+		;CXPPMM		;Players collide or missiles collide
+		;sta	CXCLR clears the collision flags
         
 .waitForOverscan
         lda     INTIM
