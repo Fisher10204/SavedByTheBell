@@ -1,0 +1,7 @@
+TODO
+
+1. Player and player movement
+2. collisions
+3. add in other sprites(ball, missiles, etc)
+	and the collision detection
+4. Add in "rooms" and tweak existing	
