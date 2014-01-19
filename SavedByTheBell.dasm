@@ -56,6 +56,12 @@ Start
         lda                #85
         sta                vert
         
+        		lda			#$AD
+		sta			COLUP0
+		
+		lda		#100
+		sta		NUSIZ0
+        
 ;------------------------------------------------
 ; Vertical Blank
 ;------------------------------------------------
@@ -194,6 +200,8 @@ DrawScreen
 
         ldx                #0
         ldy                #116
+        lda		#2
+	sta		ENAM0
 .playfieldLoop
         lda                .playfield0,x
         sta                PF0
@@ -203,6 +211,8 @@ DrawScreen
         sta                PF2
         inx
         clc
+        lda					#0
+	sta					ENAM0
         dey
         sta                WSYNC
         bne                .playfieldLoop
