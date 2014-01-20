@@ -40,7 +40,7 @@ loopscore	.byte
         ORG   $F000               ; 4k ROM start point
 
 Start 
-        CLEAN_START                        ; Clear RAM and Registers
+        CLEAN_START               ; Clear RAM and Registers
 
         
         
@@ -227,8 +227,6 @@ DrawScreen
 		lda					#2
 		sta					ENAM0
 .missileDisable
-		lda					#0
-		sta					ENAM0
         dey
         sta                WSYNC
         bne                .playfieldLoop
