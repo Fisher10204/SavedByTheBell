@@ -53,7 +53,7 @@ Start
         sta                horiz
 		lda					#20
 		sta				   startingx
-        lda                #10
+        lda                #85
         sta                vert
         
         		lda			#$AD
@@ -92,9 +92,7 @@ MainLoop
 ;        sbc                #15                ;2
 ;        bpl                .horizloop        ;3
 ;        sta                RESBL
-		sta					WSYNC
-		sta					HMOVE
-		
+        
 .waitForVBlank
         lda                INTIM
         bne                .waitForVBlank
@@ -202,9 +200,8 @@ DrawScreen
 
         ldx                #0
         ldy                #116
-		sta					WSYNC
-        ;lda		#2
-		;sta		ENAM0
+        lda		#2
+		sta		ENAM0
 .playfieldLoop
         lda                .playfield0,x
         sta                PF0
@@ -227,11 +224,11 @@ DrawScreen
 		lda					#2
 		sta					ENAM0
 .missileDisable
-		lda					#0
-		sta					ENAM0
+		;lda					#0
+		;sta					ENAM0
         dey
         sta                WSYNC
-        bne                .playfieldLoop
+        bne                .missileLoop
 
         lda                #%00000000
         sta                PF0
@@ -313,38 +310,7 @@ DrawScreen
 		;CXM0FB		;missile collides with PlayField Or Ball
 		;CXPPMM		;Players collide or missiles collide
 		;sta	CXCLR clears the collision flags
-.playerMovement
-		lda					#%00000000
-		sta					HMM0
-		lda             SWCHA
-        and             #%10000000
-        beq             .right
-        lda             SWCHA
-        and             #%01000000
-        beq             .left
-        lda             SWCHA
-        and             #%00010000
-        beq             .up
-        lda             SWCHA
-        and             #%00100000
-        beq             .down
-		jmp				.waitForOverscan
-.right
-		lda				#%11110000
-		sta				HMM0
-		jmp				.moveHoriz
-.left
-		lda				#%00010000
-		sta				HMM0
-		jmp				.moveHoriz
-.moveHoriz
-		jmp				.waitForOverscan
-.up
-		inc				vert
-		jmp				.waitForOverscan			
-.down
-		dec				vert
-		
+        
 .waitForOverscan
         lda     INTIM
         bne     .waitForOverscan
