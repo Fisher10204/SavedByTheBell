@@ -29,10 +29,11 @@ PF_BALL_SIZE4 = %00100000
 
 horiz        .byte
 vert        .byte
+level1pos	.byte
 
-startingx	.byte
+startingx        .byte
 
-loopscore	.byte
+loopscore        .byte
 ;------------------------------------------------
 ; Start of ROM
 ;------------------------------------------------
@@ -40,27 +41,28 @@ loopscore	.byte
         ORG   $F000               ; 4k ROM start point
 
 Start 
-        CLEAN_START               ; Clear RAM and Registers
+        CLEAN_START                        ; Clear RAM and Registers
 
-        
         
         lda                #PF_REFLECT; | PF_BALL_SIZE4
         sta                CTRLPF
         ;lda                #2
         ;sta                ENABL
+		lda					#1
+		sta					level1pos
         
         lda                #0
         sta                horiz
-		lda					#20
-		sta				   startingx
-        lda                #10
+        lda                #20
+        sta                startingx
+        lda                #95
         sta                vert
-        
-        		lda			#$AD
-		sta			COLUP0
+        lda                #$AD
+        sta               COLUP1
 		
-		lda		#100
-		sta		NUSIZ0
+                
+        lda                ##%00100000
+        sta                NUSIZ1
         
 ;------------------------------------------------
 ; Vertical Blank
@@ -69,6 +71,16 @@ MainLoop
         lda                #0
         sta                VBLANK
         VERTICAL_SYNC
+				lda			level1pos
+				cmp			#1
+				bne			.finishLoop
+				inc			level1pos
+				;nop
+				;nop
+				;nop
+				nop
+				sta			RESM1
+.finishLoop
     lda     #43
     sta     TIM64T
 
@@ -92,9 +104,10 @@ MainLoop
 ;        sbc                #15                ;2
 ;        bpl                .horizloop        ;3
 ;        sta                RESBL
-		sta					WSYNC
-		sta					HMOVE
-		
+
+                sta                                        WSYNC
+                sta                                        HMOVE
+                
 .waitForVBlank
         lda                INTIM
         bne                .waitForVBlank
@@ -111,100 +124,100 @@ DrawScreen
         lda                #$47
         sta                COLUPF
 
-        ldx					startingx
-		lda					.zero_left,x
-		sta					WSYNC
-		sta					PF1
-		
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
+        ldx                startingx
+                lda        .zero_left,x
+                sta        WSYNC
+                sta         PF1
+                
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
 
 
-		lda				.zero_back,x
-		sta				PF1
-		sta				WSYNC
-		
-		lda				#4
-		sta				loopscore
+                lda                                .zero_back,x
+                sta                                PF1
+                sta                                WSYNC
+                
+                lda                                #4
+                sta                                loopscore
 .scoreloop
-		inx
-		lda				.zero_left,x
-		sta				PF1
-		
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
+                inx
+                lda                                .zero_left,x
+                sta                                PF1
+                
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
 
-		lda				.zero_back,x
-		sta				PF1	
+                lda                                .zero_back,x
+                sta                                PF1        
 
-		sta				WSYNC
-		lda				.zero_left,x
-		sta				PF1
+                sta                                WSYNC
+                lda                                .zero_left,x
+                sta                                PF1
 
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		
-		lda				.zero_back,x
-		sta				PF1	
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                
+                lda                                .zero_back,x
+                sta                                PF1        
 
-		sta				WSYNC
+                sta                                WSYNC
+			
 
+                dec                                loopscore
+                bne                                .scoreloop
 
-		dec				loopscore
-		bne				.scoreloop
-
-		lda				#0
-		sta				PF1
-		
-        sta				WSYNC
-		sta				WSYNC
+                lda                                #0
+                sta                                PF1
+                
+        sta                                WSYNC
+                sta                                WSYNC
 
         ldx                #0
         ldy                #116
-		sta					WSYNC
-        ;lda		#2
-		;sta		ENAM0
+                sta                                        WSYNC
+        ;lda                #2
+                ;sta                ENAM0
 .playfieldLoop
         lda                .playfield0,x
         sta                PF0
@@ -215,17 +228,17 @@ DrawScreen
         inx
         clc
 .missileLoop
-		;check missile0
-		tya
-		sbc                vert
-		adc                #5
-		bcs				   .missileEnable
-		lda				   #0
-		sta				   ENAM0
-		jmp				   .missileDisable
+                ;check missile0
+                tya
+                sbc                vert
+                adc                #5
+                bcs                                   .missileEnable
+                lda                                   #0
+                sta                                   ENAM1
+                jmp                                   .missileDisable
 .missileEnable
-		lda					#2
-		sta					ENAM0
+                lda                                        #2
+                sta                                        ENAM1
 .missileDisable
         dey
         sta                WSYNC
@@ -267,7 +280,7 @@ DrawScreen
 ;        tya
 ;        clc
 ;        sbc                vert
-;        adc                #7			;height
+;        adc                #7                        ;height
 ;
 ;        bcs                .enableBall
 ;        lda                #0
@@ -299,22 +312,37 @@ DrawScreen
 ;------------------------------------------------
         lda                #%01000010
         sta                VBLANK
-    	lda                #36
-    	sta                TIM64T
+            lda                #36
+            sta                TIM64T
 
         ;***** Overscan Code goes here
-		;collision detection will happen between Missile0
-		;and other stuff, the player controls
-		;missile0
-		;addresses for collision:
-		;CXM0P		;missile collides with player0 or1
-		;CXM0FB		;missile collides with PlayField Or Ball
-		;CXPPMM		;Players collide or missiles collide
-		;sta	CXCLR clears the collision flags
+                ;collision detection will happen between Missile0
+                ;and other stuff, the player controls
+                ;missile0
+                ;addresses for collision:
+                ;CXM0P                ;missile collides with player0 or1
+                ;CXM0FB                ;missile collides with PlayField Or Ball
+                ;CXPPMM                ;Players collide or missiles collide
+                ;sta        CXCLR clears the collision flags
+
+;check for player collision
+.playerCollide
+		lda		CXM1FB
+		and		#%10000000
+		bne		.playerHitWall
+		jmp		.playerMovement
+		
+.playerHitWall
+		lda		#1
+		sta		level1pos
+		lda		#95
+		sta		vert
+		sta		CXCLR
+
 .playerMovement
-		lda					#%00000000
-		sta					HMM0
-		lda             SWCHA
+                lda                                        #%00000000
+                sta                                        HMM1
+                lda             SWCHA
         and             #%10000000
         beq             .right
         lda             SWCHA
@@ -326,23 +354,23 @@ DrawScreen
         lda             SWCHA
         and             #%00100000
         beq             .down
-		jmp				.waitForOverscan
+                jmp                                .waitForOverscan
 .right
-		lda				#%11110000
-		sta				HMM0
-		jmp				.moveHoriz
+                lda                                #%11110000
+                sta                                HMM1
+                jmp                                .moveHoriz
 .left
-		lda				#%00010000
-		sta				HMM0
-		jmp				.moveHoriz
+                lda                                #%00010000
+                sta                                HMM1
+                jmp                                .moveHoriz
 .moveHoriz
-		jmp				.waitForOverscan
+                jmp                                .waitForOverscan
 .up
-		inc				vert
-		jmp				.waitForOverscan			
+                inc                                vert
+                jmp                                .waitForOverscan                        
 .down
-		dec				vert
-		
+                dec                                vert
+                
 .waitForOverscan
         lda     INTIM
         bne     .waitForOverscan
@@ -741,11 +769,11 @@ DrawScreen
         .byte                %11111111
         .byte                %11111111
 .zero_left
-		.byte	%11100000
-		.byte	%10100000
-		.byte	%10100000
-		.byte	%10100000
-		.byte	%11100000
+                .byte        %11100000
+                .byte        %10100000
+                .byte        %10100000
+                .byte        %10100000
+                .byte        %11100000
 
 .one_left
        .byte   %01000000
@@ -760,25 +788,25 @@ DrawScreen
        .byte   %10000000
        .byte   %11100000
 .three_left
-	   .byte   %11100000
+           .byte   %11100000
        .byte   %00100000
        .byte   %11100000
        .byte   %00100000
        .byte   %11100000
 .four_left
-		.byte  %10100000
+                .byte  %10100000
        .byte   %10100000
        .byte   %11100000
        .byte   %00100000
        .byte   %00100000
 .five_left
-		.byte  %11100000
+                .byte  %11100000
        .byte   %10000000
        .byte   %11100000
        .byte   %00100000
        .byte   %11100000
 .six_left
-	   .byte   %11100000
+           .byte   %11100000
        .byte   %10000000
        .byte   %11100000
        .byte   %10100000
@@ -802,18 +830,18 @@ DrawScreen
        .byte   %00100000
        .byte   %00100000
 .ten_left
-    	.byte   %01001110
-    	.byte   %11001010
-    	.byte   %01001010
-    	.byte   %01001010
-    	.byte   %11101110
+            .byte   %01001110
+            .byte   %11001010
+            .byte   %01001010
+            .byte   %01001010
+            .byte   %11101110
 
 .zero_back
-		.byte	%00000111
-		.byte	%00000101
-		.byte	%00000101
-		.byte	%00000101
-		.byte	%00000111
+                .byte        %00000111
+                .byte        %00000101
+                .byte        %00000101
+                .byte        %00000101
+                .byte        %00000111
 
 .one_back
         .byte   %00000010
@@ -829,53 +857,53 @@ DrawScreen
         .byte   %00000001
         .byte   %00000111
 .three_back
-		.byte   %00000111
+                .byte   %00000111
         .byte   %00000100
         .byte   %00000111
         .byte   %00000100
         .byte   %00000111
 .four_back
-		.byte   %00000101
+                .byte   %00000101
         .byte   %00000101
         .byte   %00000111
         .byte   %00000100
         .byte   %00000100
 .five_back
-		.byte   %00000111
+                .byte   %00000111
         .byte   %00000001
         .byte   %00000111
         .byte   %00000100
         .byte   %00000111
 .six_back
-		.byte   %00000111
+                .byte   %00000111
         .byte   %00000001
         .byte   %00000111
         .byte   %00000101
         .byte   %00000111
 .seven_back
-		.byte   %00000111
+                .byte   %00000111
         .byte   %00000100
         .byte   %00000100
         .byte   %00000100
         .byte   %00000100
 .eight_back
-		.byte   %00000111
+                .byte   %00000111
         .byte   %00000101
         .byte   %00000111
         .byte   %00000101
         .byte   %00000111
 .nine_back
-		.byte   %00000111
+                .byte   %00000111
         .byte   %00000101
         .byte   %00000111
         .byte   %00000100
         .byte   %00000100
 .ten_back
-		.byte	%01110010
-		.byte	%01010011
-		.byte	%01010010
-		.byte	%01010010
-		.byte   %01110111
+                .byte        %01110010
+                .byte        %01010011
+                .byte        %01010010
+                .byte        %01010010
+                .byte   %01110111
 
 
 ;------------------------------------------------
