@@ -55,7 +55,7 @@ Start
         sta                horiz
         lda                #20
         sta                startingx
-        lda                #95
+        lda                #160
         sta                vert
         lda                #$AD
         sta               COLUP1
@@ -118,104 +118,102 @@ MainLoop
 ;------------------------------------------------        
 DrawScreen
 
-        lda                #$80
-        sta                COLUBK
+		       lda                 #$80
+		       sta                 COLUBK
 
-        lda                #$47
-        sta                COLUPF
+		       lda                 #$47
+		       sta                 COLUPF
 
-        ldx                startingx
-                lda        .zero_left,x
-                sta        WSYNC
-                sta         PF1
+		       ldx                 startingx
+               lda        		   .zero_left,x
+               sta        		   WSYNC
+               sta         		   PF1
                 
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
 
 
-                lda                                .zero_back,x
-                sta                                PF1
-                sta                                WSYNC
-                
-                lda                                #4
-                sta                                loopscore
+               lda                 .zero_back,x
+               sta                 PF1
+               sta                 WSYNC
+               
+               lda                 #4
+               sta                 loopscore
 .scoreloop
-                inx
-                lda                                .zero_left,x
-                sta                                PF1
-                
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
+               inx
+               lda                 .zero_left,x
+               sta                 PF1
+               
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
 
-                lda                                .zero_back,x
-                sta                                PF1        
+               lda                .zero_back,x
+               sta                PF1        
+               sta                WSYNC
+               lda                .zero_left,x
+               sta                PF1
 
-                sta                                WSYNC
-                lda                                .zero_left,x
-                sta                                PF1
-
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                nop
-                
-                lda                                .zero_back,x
-                sta                                PF1        
-
-                sta                                WSYNC
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               nop
+               
+               lda                .zero_back,x
+               sta                PF1        
+               sta                WSYNC
 			
 
-                dec                                loopscore
-                bne                                .scoreloop
+               dec                loopscore
+               bne                .scoreloop
 
-                lda                                #0
-                sta                                PF1
+               lda                #0
+               sta                PF1
                 
-        sta                                WSYNC
-                sta                                WSYNC
+        	   sta                WSYNC
+               sta                WSYNC
 
-        ldx                #0
-        ldy                #116
-                sta                                        WSYNC
+        	   ldx                #0
+               ldy                #180
+               sta                WSYNC
         ;lda                #2
                 ;sta                ENAM0
 .playfieldLoop
@@ -244,15 +242,15 @@ DrawScreen
         sta                WSYNC
         bne                .playfieldLoop
 
-        lda                #%00000000
-        sta                PF0
-        sta                PF1
-        sta                PF2
-        ldy                #65
-.playfieldLoop2
-        dey
-        sta                WSYNC
-        bne                .playfieldLoop2
+;        lda                #%11111111
+ ;       sta                PF0
+  ;      sta                PF1
+   ;     sta                PF2
+;        ldy                #20
+;.playfieldLoop2
+ ;       dey
+  ;      sta                WSYNC
+   ;     bne                .playfieldLoop2
 ;        lda                #%11111111
 ;        sta                PF0
 ;        sta                PF1
@@ -316,6 +314,10 @@ DrawScreen
             sta                TIM64T
 
         ;***** Overscan Code goes here
+		   lda				   #%00000000
+		   sta				   PF0
+		   sta				   PF1
+		   sta				   PF2
                 ;collision detection will happen between Missile0
                 ;and other stuff, the player controls
                 ;missile0
@@ -335,7 +337,7 @@ DrawScreen
 .playerHitWall
 		lda		#1
 		sta		level1pos
-		lda		#95
+		lda		#160
 		sta		vert
 		sta		CXCLR
 
@@ -415,6 +417,80 @@ DrawScreen
         .byte                %00110000
         .byte                %00110000
         .byte                %00110000
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
+        .byte                %11111100
         .byte                %11111100
         .byte                %11111100
         .byte                %11111100
@@ -604,6 +680,59 @@ DrawScreen
         .byte                %00001111
         .byte                %00001111
         .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
+        .byte                %00001111
         .byte                %00000000
         .byte                %00000000
         .byte                %00000000
@@ -634,8 +763,7 @@ DrawScreen
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
-        .byte                %11111111
-        .byte                %11111111
+		.byte                %11111111
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
@@ -747,6 +875,60 @@ DrawScreen
         .byte                %10000000
         .byte                %10000000
         .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+        .byte                %10000000
+		.byte                %11111111
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
@@ -762,18 +944,16 @@ DrawScreen
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
-        .byte                %11111111
-        .byte                %11111111
-        .byte                %11111111
+		.byte                %11111111
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
 .zero_left
-                .byte        %11100000
-                .byte        %10100000
-                .byte        %10100000
-                .byte        %10100000
-                .byte        %11100000
+       .byte        %11100000
+       .byte        %10100000
+       .byte        %10100000
+       .byte        %10100000
+       .byte        %11100000
 
 .one_left
        .byte   %01000000
@@ -788,25 +968,25 @@ DrawScreen
        .byte   %10000000
        .byte   %11100000
 .three_left
-           .byte   %11100000
+       .byte   %11100000
        .byte   %00100000
        .byte   %11100000
        .byte   %00100000
        .byte   %11100000
 .four_left
-                .byte  %10100000
+       .byte   %10100000
        .byte   %10100000
        .byte   %11100000
        .byte   %00100000
        .byte   %00100000
 .five_left
-                .byte  %11100000
+       .byte   %11100000
        .byte   %10000000
        .byte   %11100000
        .byte   %00100000
        .byte   %11100000
 .six_left
-           .byte   %11100000
+       .byte   %11100000
        .byte   %10000000
        .byte   %11100000
        .byte   %10100000
@@ -830,80 +1010,80 @@ DrawScreen
        .byte   %00100000
        .byte   %00100000
 .ten_left
-            .byte   %01001110
-            .byte   %11001010
-            .byte   %01001010
-            .byte   %01001010
-            .byte   %11101110
+       .byte   %01001110
+       .byte   %11001010
+       .byte   %01001010
+       .byte   %01001010
+       .byte   %11101110
 
 .zero_back
-                .byte        %00000111
-                .byte        %00000101
-                .byte        %00000101
-                .byte        %00000101
-                .byte        %00000111
+       .byte   %00000111
+       .byte   %00000101
+       .byte   %00000101
+       .byte   %00000101
+       .byte   %00000111
 
 .one_back
-        .byte   %00000010
-        .byte   %00000011
-        .byte   %00000010
-        .byte   %00000010
-        .byte   %00000111
+       .byte   %00000010
+       .byte   %00000011
+       .byte   %00000010
+       .byte   %00000010
+       .byte   %00000111
 
 .two_back
-        .byte   %00000111
-        .byte   %00000100
-        .byte   %00000111
-        .byte   %00000001
-        .byte   %00000111
+       .byte   %00000111
+       .byte   %00000100
+       .byte   %00000111
+       .byte   %00000001
+       .byte   %00000111
 .three_back
-                .byte   %00000111
-        .byte   %00000100
-        .byte   %00000111
-        .byte   %00000100
-        .byte   %00000111
+       .byte   %00000111
+       .byte   %00000100
+       .byte   %00000111
+       .byte   %00000100
+       .byte   %00000111
 .four_back
-                .byte   %00000101
-        .byte   %00000101
-        .byte   %00000111
-        .byte   %00000100
-        .byte   %00000100
+       .byte   %00000101
+       .byte   %00000101
+       .byte   %00000111
+       .byte   %00000100
+       .byte   %00000100
 .five_back
-                .byte   %00000111
-        .byte   %00000001
-        .byte   %00000111
-        .byte   %00000100
-        .byte   %00000111
+       .byte   %00000111
+       .byte   %00000001
+       .byte   %00000111
+       .byte   %00000100
+       .byte   %00000111
 .six_back
-                .byte   %00000111
-        .byte   %00000001
-        .byte   %00000111
-        .byte   %00000101
-        .byte   %00000111
+       .byte   %00000111
+       .byte   %00000001
+       .byte   %00000111
+       .byte   %00000101
+       .byte   %00000111
 .seven_back
-                .byte   %00000111
-        .byte   %00000100
-        .byte   %00000100
-        .byte   %00000100
-        .byte   %00000100
+       .byte   %00000111
+       .byte   %00000100
+       .byte   %00000100
+       .byte   %00000100
+       .byte   %00000100
 .eight_back
-                .byte   %00000111
-        .byte   %00000101
-        .byte   %00000111
-        .byte   %00000101
-        .byte   %00000111
+       .byte   %00000111
+       .byte   %00000101
+       .byte   %00000111
+       .byte   %00000101
+       .byte   %00000111
 .nine_back
-                .byte   %00000111
-        .byte   %00000101
-        .byte   %00000111
-        .byte   %00000100
-        .byte   %00000100
+       .byte   %00000111
+       .byte   %00000101
+       .byte   %00000111
+       .byte   %00000100
+       .byte   %00000100
 .ten_back
-                .byte        %01110010
-                .byte        %01010011
-                .byte        %01010010
-                .byte        %01010010
-                .byte   %01110111
+       .byte   %01110010
+       .byte   %01010011
+       .byte   %01010010
+       .byte   %01010010
+       .byte   %01110111
 
 
 ;------------------------------------------------
