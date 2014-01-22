@@ -86,6 +86,10 @@ Start
         lda                ##%00100000
         sta                NUSIZ1
 
+		lda		#100
+		sta		NUSIZ0
+		
+
 		lda				   #3
 		sta				   lives
         
@@ -233,7 +237,7 @@ DrawScreen
         lda                .playfield2,x
         sta                PF2
         inx
-        clc
+        ;clc
 .missileLoop
                ;check missile1
         tya
@@ -242,12 +246,12 @@ DrawScreen
         bcs                                   .missileEnable
         lda                                   #0
         sta                                   ENAM1
-        jmp                                   .missileDisable
+        jmp                                   .row1check
 .missileEnable
         lda                                        #2
         sta                                        ENAM1
 
-.missileDisable
+;.missileDisable
 ;		lda		counter
 ;		sbc		#50
 ;		bne		.row1check
@@ -257,18 +261,18 @@ DrawScreen
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;		
 ;vert ~101-150
 .row1check
-		inc			counter
+		;inc			counter
 		
 ;sprite  0	
 .sprite0Loop
         tya
         sbc                sprite0vert
-        adc                #5
+       adc                #5
         bcs                                   .sprite0Enable
         lda                                   #0
 		sta									  GRP0
-		sta									  WSYNC
-        jmp                                   .endPlayfieldLoop
+		;sta								  WSYNC
+        jmp                                   .missile0Loop
 .sprite0Enable
         lda                                   #%11110000
         sta                                   GRP0
@@ -287,6 +291,7 @@ DrawScreen
         bcs                                   .missile0Enable
         lda                                   #0
         sta                                   ENAM0
+		;sta									  WSYNC
         jmp                                   .endPlayfieldLoop
 .missile0Enable
         lda                                   #2
@@ -340,6 +345,9 @@ DrawScreen
                 ;sta        CXCLR clears the collision flags
 
 ;check for player collision
+.ballMovement
+		lda	#%11010000
+		sta	HMP0
 .playerCollide
 		lda		CXM1FB
 		and		#%10000000
@@ -350,6 +358,10 @@ DrawScreen
 		bne		.playerDied
 		
 		lda		CXM1FB
+		and		#%01000000
+		bne		.playerDied
+		
+		lda		CXPPMM
 		and		#%01000000
 		bne		.playerDied
 		
@@ -405,6 +417,8 @@ DrawScreen
                 jmp                                .waitForOverscan                        
 .down
                 dec                                vert
+
+
                 
 .waitForOverscan
         lda     INTIM
