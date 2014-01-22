@@ -41,6 +41,8 @@ missile0horiz	.byte
 
 ballvert		.byte
 ballhoriz		.byte
+
+lives			.byte
 ;------------------------------------------------
 ; Start of ROM
 ;------------------------------------------------
@@ -83,6 +85,9 @@ Start
                 
         lda                ##%00100000
         sta                NUSIZ1
+
+		lda				   #3
+		sta				   lives
         
 ;------------------------------------------------
 ; Vertical Blank
@@ -121,9 +126,15 @@ DrawScreen
 
 		       lda                 #$47
 		       sta                 COLUPF
-
-		       ldx                 startingx
-               lda        		   .zero_left,x
+				
+			
+			   	lda					lives
+				asl
+		   		asl
+				adc					lives
+				tax
+				ldy					startingx
+               lda        		   .zero_left,y
                sta        		   WSYNC
                sta         		   PF1
                 
@@ -152,7 +163,8 @@ DrawScreen
                sta                 loopscore
 .scoreloop
                inx
-              lda                 .zero_left,x
+				iny
+              lda                 .zero_left,y
               sta                 PF1
               
               nop
@@ -175,7 +187,7 @@ DrawScreen
               lda                .zero_back,x
               sta                PF1        
               sta                WSYNC
-              lda                .zero_left,x
+              lda                .zero_left,y
               sta                PF1
 
               nop
@@ -351,11 +363,16 @@ DrawScreen
 		sta		level1pos
 		lda		#160
 		sta		vert
+		dec		lives
+		cmp		#0
+		beq		.gameOver
 		sta		CXCLR
 		
 .endLevel
 		
-
+.gameOver
+		
+		
 .playerMovement
                 lda                                        #%00000000
                 sta                                        HMM1
@@ -399,6 +416,10 @@ DrawScreen
 ;------------------------------------------------
         ;***** ROM tables go here
 .playfield0     ;11110000        playfield 0 only reads these bits marked 1
+	;break into segments of 16 for top, 18 for top of maze,112 for middle of maze, 14 for bottom of maze, 20 for bottom
+		;202
+        ;16
+		.byte                %11111111
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
@@ -414,7 +435,8 @@ DrawScreen
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
-        .byte                %11111111
+
+		;17->18
         .byte                %00110000
         .byte                %00110000
         .byte                %00110000
@@ -432,6 +454,7 @@ DrawScreen
         .byte                %00110000
         .byte                %00110000
         .byte                %00110000
+		;148
         .byte                %11111100
         .byte                %11111100
         .byte                %11111100
@@ -580,6 +603,7 @@ DrawScreen
         .byte                %11111100
         .byte                %11111100
         .byte                %11111100
+		;21
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
@@ -601,7 +625,9 @@ DrawScreen
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
-.playfield1
+
+.playfield1					;180
+		;16
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
@@ -618,6 +644,7 @@ DrawScreen
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
+		;130
         .byte                %00001111
         .byte                %00001111
         .byte                %00001111
@@ -748,6 +775,7 @@ DrawScreen
         .byte                %00001111
         .byte                %00001111
         .byte                %00001111
+		;14
         .byte                %00000000
         .byte                %00000000
         .byte                %00000000
@@ -762,6 +790,7 @@ DrawScreen
         .byte                %00000000
         .byte                %00000000
         .byte                %00000000
+		;20
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
@@ -782,7 +811,9 @@ DrawScreen
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
-.playfield2                        ;currently backwards
+.playfield2                        ;180
+        ;16
+		.byte                %11111111
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
@@ -798,7 +829,7 @@ DrawScreen
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
-        .byte                %11111111
+		;18
         .byte                %00000000
         .byte                %00000000
         .byte                %00000000
@@ -817,6 +848,7 @@ DrawScreen
         .byte                %00000000
         .byte                %00000000
         .byte                %00000000
+		;126
         .byte                %10000000
         .byte                %10000000
         .byte                %10000000
@@ -943,6 +975,7 @@ DrawScreen
         .byte                %10000000
         .byte                %10000000
         .byte                %10000000
+		;20
 		.byte                %11111111
         .byte                %11111111
         .byte                %11111111
