@@ -26,20 +26,19 @@ PF_BALL_SIZE4 = %00100000
 ;------------------------------------------------
     SEG.U   variables
     ORG     $80
+counter			.byte
+horiz       	.byte
+vert        	.byte
+level1pos		.byte
+startingx   	.byte
+loopscore   	.byte
 
-horiz        .byte
-vert        .byte
-level1pos        .byte
-
-startingx        .byte
-
-loopscore        .byte
-
-;obstacles
 sprite0vert		.byte
 sprite0horiz	.byte
+
 missile0vert	.byte
 missile0horiz	.byte
+
 ballvert		.byte
 ballhoriz		.byte
 ;------------------------------------------------
@@ -56,20 +55,32 @@ Start
         sta                CTRLPF
         ;lda                #2
         ;sta                ENABL
-        lda                #1
-        sta                level1pos
+		lda					#1
+		sta					level1pos
         
         lda                #0
         sta                horiz
+		sta				   counter
         lda                #20
         sta                startingx
         lda                #160
         sta                vert
         lda                #$AD
-        sta               COLUP1
-
+        sta                COLUP1
 		
-
+		;setting player0 and missile0 color
+		lda				   #$40
+		sta				   COLUP0
+		
+		lda				   #125
+		sta				   sprite0vert
+		
+		lda				   #75
+		sta				   missile0vert
+		
+		lda				   #25
+		sta				   ballvert
+                
         lda                ##%00100000
         sta                NUSIZ1
         
@@ -80,21 +91,20 @@ MainLoop
         lda                #0
         sta                VBLANK
         VERTICAL_SYNC
-        lda                        level1pos
-        cmp                        #1
-        bne                        .finishLoop
-        inc                        level1pos
-        ;nop
-        ;nop
-        ;nop
-        nop
-        sta                        RESM1
+				lda			level1pos
+				cmp			#1
+				bne			.finishLoop
+				inc			level1pos
+				nop
+				sta			RESM1
 .finishLoop
     lda     #43
     sta     TIM64T
 
-    sta                WSYNC
-    sta                HMOVE
+        ;***** Vertical Blank code goes here
+
+        sta                                        WSYNC
+        sta                                        HMOVE
                 
 .waitForVBlank
         lda                INTIM
@@ -106,16 +116,16 @@ MainLoop
 ;------------------------------------------------        
 DrawScreen
 
-               lda                 #$80
-               sta                 COLUBK
+		       lda                 #$80
+		       sta                 COLUBK
 
-               lda                 #$47
-               sta                 COLUPF
+		       lda                 #$47
+		       sta                 COLUPF
 
-               ldx                 startingx
-               lda                           .zero_left,x
-               sta                           WSYNC
-               sta                            PF1
+		       ldx                 startingx
+               lda        		   .zero_left,x
+               sta        		   WSYNC
+               sta         		   PF1
                 
                nop
                nop
@@ -142,66 +152,66 @@ DrawScreen
                sta                 loopscore
 .scoreloop
                inx
-               lda                 .zero_left,x
-               sta                 PF1
+              lda                 .zero_left,x
+              sta                 PF1
+              
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+
+              lda                .zero_back,x
+              sta                PF1        
+              sta                WSYNC
+              lda                .zero_left,x
+              sta                PF1
+
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              nop
+              
+              lda                .zero_back,x
+              sta                PF1        
+              sta                WSYNC
+		
+
+              dec                loopscore
+              bne                .scoreloop
+
+              lda                #0
+              sta                PF1
                
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
+       	   	  sta                WSYNC
+              sta                WSYNC
 
-               lda                .zero_back,x
-               sta                PF1        
-               sta                WSYNC
-               lda                .zero_left,x
-               sta                PF1
-
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               nop
-               
-               lda                .zero_back,x
-               sta                PF1        
-               sta                WSYNC
-                        
-
-               dec                loopscore
-               bne                .scoreloop
-
-               lda                #0
-               sta                PF1
-                
-               sta                WSYNC
-               sta                WSYNC
-
-               ldx                #0
-               ldy                #180
-               sta                WSYNC
+       	      ldx                #0
+              ldy                #180
+              sta                WSYNC
 
 .playfieldLoop
         lda                .playfield0,x
@@ -213,22 +223,87 @@ DrawScreen
         inx
         clc
 .missileLoop
-                ;check missile0
-                tya
-                sbc                vert
-                adc                #5
-                bcs                                   .missileEnable
-                lda                                   #0
-                sta                                   ENAM1
-                jmp                                   .missileDisable
+               ;check missile1
+        tya
+        sbc                vert
+        adc                #5
+        bcs                                   .missileEnable
+        lda                                   #0
+        sta                                   ENAM1
+        jmp                                   .missileDisable
 .missileEnable
-                lda                                        #2
-                sta                                        ENAM1
-.missileDisable
-        dey
-        sta                WSYNC
-        bne                .playfieldLoop
+        lda                                        #2
+        sta                                        ENAM1
 
+.missileDisable
+		lda		counter
+		sbc		#50
+		bne		.row1check
+		sbc		#50
+		bmi		.row2check
+		jmp		.row3check
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;		
+;vert ~101-150
+.row1check
+		inc			counter
+		
+;sprite  0	
+.sprite0Loop
+        tya
+        sbc                sprite0vert
+        adc                #5
+        bcs                                   .sprite0Enable
+        lda                                   #0
+		sta									  GRP0
+        jmp                                   .endPlayfieldLoop
+.sprite0Enable
+        lda                                   #%11110000
+        sta                                   GRP0
+		jmp                                   .endPlayfieldLoop		
+		
+;vert ~51-100
+.row2check
+;		inc			counter
+		
+;missile 0
+.missile0Loop
+               ;check missile0
+;        tya
+ ;       sbc                missile0vert
+  ;      adc                #5
+   ;     bcs                                   .missile0Enable
+    ;    lda                                   #0
+     ;   sta                                   ENAM0
+      ;  jmp                                   .endPlayfieldLoop
+.missile0Enable
+;        lda                                   #2
+ ;       sta                                   ENAM0
+;		jmp                                   .endPlayfieldLoop
+
+;vert ~1-50
+.row3check
+;		inc			counter
+
+;ball
+.ballLoop
+ ;       tya
+  ;      sbc                ballvert
+   ;     adc                #5
+    ;    bcs                                   .ballEnable
+     ;   lda                                   #0
+      ;  sta                                   ENABL
+       ; jmp                                   .endPlayfieldLoop
+.jmpplayfieldLoop
+		;jmp					.playfieldLoop
+.ballEnable
+        ;lda                                   #2
+        ;sta                                   ENABL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+.endPlayfieldLoop
+        dey
+        ;sta                WSYNC
+        ;bne                .jmpplayfieldLoop
+		bne					.playfieldLoop
 ;------------------------------------------------
 ; Overscan
 ;------------------------------------------------
@@ -238,10 +313,10 @@ DrawScreen
         sta                TIM64T
 
         ;***** Overscan Code goes here
-        lda                #%00000000
-        sta                PF0
-        sta                PF1
-        sta                PF2
+		lda				   #%00000000
+		sta				   PF0
+		sta				   PF1
+		sta				   PF2
                 ;collision detection will happen between Missile0
                 ;and other stuff, the player controls
                 ;missile0
@@ -253,22 +328,38 @@ DrawScreen
 
 ;check for player collision
 .playerCollide
-        lda                CXM1FB
-        and                #%10000000
-        bne                .playerHitWall
-        jmp                .playerMovement
-        
-.playerHitWall
-        lda                #1
-        sta                level1pos
-        lda                #160
-        sta                vert
-        sta                CXCLR
+		lda		CXM1FB
+		and		#%10000000
+		bne		.playerDied
+		
+		lda		CXM1P
+		and		#%10000000
+		bne		.playerDied
+		
+		lda		CXM1FB
+		and		#%01000000
+		bne		.playerDied
+		
+		lda		CXM1P
+		and		#%01000000
+		bne		.endLevel
+		
+		jmp		.playerMovement
+		
+.playerDied
+		lda		#1
+		sta		level1pos
+		lda		#160
+		sta		vert
+		sta		CXCLR
+		
+.endLevel
+		
 
 .playerMovement
-        lda             #%00000000
-        sta             HMM1
-        lda             SWCHA
+                lda                                        #%00000000
+                sta                                        HMM1
+                lda             SWCHA
         and             #%10000000
         beq             .right
         lda             SWCHA
@@ -280,22 +371,22 @@ DrawScreen
         lda             SWCHA
         and             #%00100000
         beq             .down
-       	jmp             .waitForOverscan
+                jmp                                .waitForOverscan
 .right
-        lda             #%11110000
-        sta             HMM1
-        jmp             .moveHoriz
+                lda                                #%11110000
+                sta                                HMM1
+                jmp                                .moveHoriz
 .left
-        lda             #%00010000
-        sta             HMM1
-        jmp             .moveHoriz
+                lda                                #%00010000
+                sta                                HMM1
+                jmp                                .moveHoriz
 .moveHoriz
-        jmp             .waitForOverscan
+                jmp                                .waitForOverscan
 .up
-        inc             vert
-        jmp             .waitForOverscan                        
+                inc                                vert
+                jmp                                .waitForOverscan                        
 .down
-        dec             vert
+                dec                                vert
                 
 .waitForOverscan
         lda     INTIM
@@ -687,7 +778,7 @@ DrawScreen
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
-        .byte                %11111111
+		.byte                %11111111
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
@@ -852,6 +943,7 @@ DrawScreen
         .byte                %10000000
         .byte                %10000000
         .byte                %10000000
+		.byte                %11111111
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
@@ -867,8 +959,7 @@ DrawScreen
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
-        .byte                %11111111
-                .byte                %11111111
+		.byte                %11111111
         .byte                %11111111
         .byte                %11111111
         .byte                %11111111
