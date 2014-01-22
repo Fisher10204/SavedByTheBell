@@ -248,12 +248,12 @@ DrawScreen
         sta                                        ENAM1
 
 .missileDisable
-		lda		counter
-		sbc		#50
-		bne		.row1check
-		sbc		#50
-		bmi		.row2check
-		jmp		.row3check
+;		lda		counter
+;		sbc		#50
+;		bne		.row1check
+;		sbc		#50
+;		bmi		.row2check
+;		jmp		.row3check
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;		
 ;vert ~101-150
 .row1check
@@ -267,6 +267,7 @@ DrawScreen
         bcs                                   .sprite0Enable
         lda                                   #0
 		sta									  GRP0
+		sta									  WSYNC
         jmp                                   .endPlayfieldLoop
 .sprite0Enable
         lda                                   #%11110000
@@ -280,17 +281,17 @@ DrawScreen
 ;missile 0
 .missile0Loop
                ;check missile0
-;        tya
- ;       sbc                missile0vert
-  ;      adc                #5
-   ;     bcs                                   .missile0Enable
-    ;    lda                                   #0
-     ;   sta                                   ENAM0
-      ;  jmp                                   .endPlayfieldLoop
+       tya
+        sbc                missile0vert
+        adc                #5
+        bcs                                   .missile0Enable
+        lda                                   #0
+        sta                                   ENAM0
+        jmp                                   .endPlayfieldLoop
 .missile0Enable
-;        lda                                   #2
- ;       sta                                   ENAM0
-;		jmp                                   .endPlayfieldLoop
+        lda                                   #2
+      sta                                   ENAM0
+		jmp                                   .endPlayfieldLoop
 
 ;vert ~1-50
 .row3check
@@ -665,7 +666,7 @@ DrawScreen
         .byte                %00001111
         .byte                %00001111
 
-		;112
+		;37
         .byte                %00001111
         .byte                %00001111
         .byte                %00001111
@@ -703,6 +704,8 @@ DrawScreen
         .byte                %00001111
         .byte                %00001111
         .byte                %00001111
+
+		;38
         .byte                %00001111
         .byte                %00001111
         .byte                %00001111
@@ -741,6 +744,8 @@ DrawScreen
         .byte                %00001111
         .byte                %00001111
         .byte                %00001111
+
+		;37
         .byte                %00001111
         .byte                %00001111
         .byte                %00001111
@@ -851,7 +856,7 @@ DrawScreen
         .byte                %00000000
         .byte                %00000000
         .byte                %00000000
-		;112
+		;37
         .byte                %10000000
         .byte                %10000000
         .byte                %10000000
@@ -889,6 +894,8 @@ DrawScreen
         .byte                %10000000
         .byte                %10000000
         .byte                %10000000
+
+		;38
         .byte                %10000000
         .byte                %10000000
         .byte                %10000000
@@ -927,6 +934,8 @@ DrawScreen
         .byte                %10000000
         .byte                %10000000
         .byte                %10000000
+
+		;37
         .byte                %10000000
         .byte                %10000000
         .byte                %10000000
